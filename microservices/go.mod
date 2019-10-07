@@ -15,4 +15,4 @@ require (
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 )
 
-replace github.com/labstack/echo-contrib => github.com/carlosedp/echo-contrib v0.6.1-0.20191002230647-bebaa759d659
+replace github.com/labstack/echo-contrib => github.com/carlosedp/echo-contrib v0.6.1-0.20191007230210-8b5ebe3ef46e

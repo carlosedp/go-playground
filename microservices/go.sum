@@ -1,6 +1,6 @@
 github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible/go.mod h1:r7JcOSlj0wfOMncg0iLm8Leh48TZaKVeNIfJntJ2wa0=
-github.com/carlosedp/echo-contrib v0.6.1-0.20191002230647-bebaa759d659 h1:HZkFIahOUgA/XLa2oAm6LsVXxNL0z5gmAH59/y7auHM=
-github.com/carlosedp/echo-contrib v0.6.1-0.20191002230647-bebaa759d659/go.mod h1:RLnZcmNBt8osHVA3Az73gZIcgoFz1hccMacbuNCNmbE=
+github.com/carlosedp/echo-contrib v0.6.1-0.20191007230210-8b5ebe3ef46e h1:vW6mp1Ff9t0WJDWNu/Nmbq5X3XFlz+l+vAxBrLRua3o=
+github.com/carlosedp/echo-contrib v0.6.1-0.20191007230210-8b5ebe3ef46e/go.mod h1:RLnZcmNBt8osHVA3Az73gZIcgoFz1hccMacbuNCNmbE=
 github.com/casbin/casbin/v2 v2.0.0/go.mod h1:YcPU1XXisHhLzuxH9coDNf2FbKpjGlbCg3n9yuLkIJQ=
 github.com/codahale/hdrhistogram v0.0.0-20161010025455-3a0bb77429bd h1:qMd81Ts1T2OTKmB4acZcyKaMtRnY5Y44NuXGX2GFJ1w=
 github.com/codahale/hdrhistogram v0.0.0-20161010025455-3a0bb77429bd/go.mod h1:sE/e/2PUdi/liOCUjSTXgM1o87ZssimdTWN964YiIeI=

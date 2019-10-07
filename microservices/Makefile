@@ -1,5 +1,5 @@
-APPS := $(go list ./... |grep cmd)
-# APPS := echo-app publisher formatter client
+# APPS := $(go list ./... |grep cmd)
+APPS := echo-app publisher formatter client
 GIT_VERSION := $(shell git --no-pager describe --tags --always --dirty)
 GIT_DATE := $(firstword $(shell git --no-pager show --date=short --format="%ad" --name-only))
 

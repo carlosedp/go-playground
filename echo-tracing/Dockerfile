@@ -4,9 +4,9 @@ ARG TARGETOS
 ENV TARGETOS ${TARGETOS}
 ENV TARGETARCH ${TARGETARCH}
 
-COPY echo-riscv-${TARGETOS}-${TARGETARCH} /echo-riscv
+COPY echo-demo-${TARGETOS}-${TARGETARCH} /echo-demo
 
 EXPOSE 8080
 
-ENTRYPOINT ["/echo-riscv"]
+ENTRYPOINT ["/echo-demo"]
 

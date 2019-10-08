@@ -59,8 +59,6 @@ func rootHandler(c echo.Context) error {
 	name := c.QueryParam("name")
 
 	if name == "" {
-		// Wrap slowFunc on a new span to trace it's execution
-		jaegertracing.TraceFunction(c, slowFunc, "Test String")
 		time.Sleep(100 * time.Millisecond)
 		name = "World"
 	}

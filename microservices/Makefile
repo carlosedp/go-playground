@@ -27,7 +27,10 @@ $(APPS):
 $(PLATFORMS):
 	GOOS=$(os) GOARCH=$(arch) CGO_ENABLED=0 go build -a -installsuffix cgo -ldflags '-X main.version $(GIT_VERSION) -extldflags "-static"' -o ${APP}-$(os)-$(arch) $<
 
-docker: $(PLATFORMS)
+docker: $(APPS)
+	echo docker buildx build -t ${REPO}/microservices-demo-$< --platform=linux/amd64 --build-args=BIN=$< --load .
+
+docker-: $(PLATFORMS)
 	docker buildx build -t ${REPO}/${APP} --platform=$(subst $(space),$(comma),$(PLATFORMS)) --push .
 
 docker-legacy: $(PLATFORMS)

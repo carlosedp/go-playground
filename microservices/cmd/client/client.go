@@ -2,38 +2,51 @@ package main
 
 import (
 	"context"
-	"log"
+	"fmt"
 	"net/http"
 	"net/url"
-	"os"
 
 	xhttp "microservices/lib/http"
 	"microservices/lib/tracing"
 
+	"github.com/labstack/echo-contrib/jaegertracing"
+	"github.com/labstack/echo/v4"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
 	otlog "github.com/opentracing/opentracing-go/log"
 )
 
 func main() {
-	if len(os.Args) != 2 {
-		log.Fatal("ERROR: Expecting one argument")
-	}
+	// if len(os.Args) != 2 {
+	// 	log.Fatal("ERROR: Expecting one argument")
+	// }
+	// helloTo := os.Args[1]
 
-	tracer, closer := tracing.Init("hello-client")
-	defer closer.Close()
-	opentracing.SetGlobalTracer(tracer)
+	e := echo.New()
+	c := jaegertracing.New(e, nil)
+	defer c.Close()
 
-	helloTo := os.Args[1]
+	e.GET("/hello/:name", func(c echo.Context) error {
+		var name = ""
+		name = c.Param("name")
+		out := fmt.Sprintf("Hello %s", name)
+		helloStr := formatString(c.Request().Context(), name)
+		printHello(c.Request().Context(), helloStr)
+		return c.String(http.StatusOK, out)
+	})
+	e.Logger.Fatal(e.Start(":8080"))
+	// tracer, closer := tracing.Init("hello-client")
+	// defer closer.Close()
+	// opentracing.SetGlobalTracer(tracer)
 
-	span := tracer.StartSpan("say-hello")
-	span.SetTag("hello-to", helloTo)
-	defer span.Finish()
+	// span := tracer.StartSpan("say-hello")
+	// span.SetTag("hello-to", helloTo)
+	// defer span.Finish()
 
-	ctx := opentracing.ContextWithSpan(context.Background(), span)
+	// ctx := opentracing.ContextWithSpan(context.Background(), span)
 
-	helloStr := formatString(ctx, helloTo)
-	printHello(ctx, helloStr)
+	// helloStr := formatString(ctx, helloTo)
+	// printHello(ctx, helloStr)
 }
 
 func formatString(ctx context.Context, helloTo string) string {
@@ -42,7 +55,7 @@ func formatString(ctx context.Context, helloTo string) string {
 
 	v := url.Values{}
 	v.Set("helloTo", helloTo)
-	url := "http://localhost:8081/format?" + v.Encode()
+	url := "http://formatter:8080/format?" + v.Encode()
 
 	// Here we create a NewReques and manually inject the tracing headers to it
 	req, err := http.NewRequest("GET", url, nil)
@@ -79,7 +92,7 @@ func printHello(ctx context.Context, helloStr string) {
 
 	v := url.Values{}
 	v.Set("helloStr", helloStr)
-	url := "http://localhost:8082/publish?" + v.Encode()
+	url := "http://publisher:8080/publish?" + v.Encode()
 
 	// Here we use convenience function to create the request with tracing headers
 	req, err := tracing.NewTracedRequest("GET", url, nil, span)

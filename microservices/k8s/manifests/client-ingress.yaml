@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: client
+  namespace: default
+spec:
+  rules:
+  - host: client.192.168.99.100.nip.io
+    http:
+      paths:
+      - backend:
+          serviceName: client
+          servicePort: 8080
+        path: /

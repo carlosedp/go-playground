@@ -1,12 +1,19 @@
-FROM scratch
-ARG TARGETARCH
-ARG TARGETOS
-ENV TARGETOS ${TARGETOS}
-ENV TARGETARCH ${TARGETARCH}
+# This is the builder container
+FROM carlosedp/golang:1.13 AS builder
 
-COPY echo-demo-${TARGETOS}-${TARGETARCH} /echo-demo
+WORKDIR $GOPATH/src/app
+ADD . $GOPATH/src/app/
+# RUN go get . # In case your application has dependencies
+RUN CGO_ENABLED=0 go build -a -installsuffix cgo -ldflags '-s -w -extldflags "-static"' -o main .
+
+RUN mv $GOPATH/src/app/main /
+
+# Application container
+FROM scratch
+
+COPY --from=builder /main /main
 
 EXPOSE 8080
 
-ENTRYPOINT ["/echo-demo"]
+ENTRYPOINT ["/main"]
 

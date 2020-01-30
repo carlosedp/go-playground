@@ -1,0 +1,15 @@
+{
+  "dependencies": [
+    {
+      "name": "ksonnet-libs",
+      "source": {
+        "git": {
+          "remote": "https://github.com/carlosedp/ksonnet-libs",
+          "subdir": ""
+        }
+      },
+      "version": "ea30531cba6f6e86bce544465f79a066e2900c22",
+      "sum": "zXAWRZIzEImZaMCm1g/NJfYM/Nn2XWLbelwylNNEySg="
+    }
+  ]
+}

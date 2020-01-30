@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: formatter
+  name: formatter
+  namespace: default
+spec:
+  ports:
+  - name: formatter
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: formatter

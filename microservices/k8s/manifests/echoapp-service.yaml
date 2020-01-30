@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: echo-app
+  name: echo-app
+  namespace: default
+spec:
+  ports:
+  - name: echo-app
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: echo-app

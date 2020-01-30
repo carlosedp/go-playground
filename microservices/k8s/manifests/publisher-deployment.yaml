@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: publisher
+  name: publisher
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: publisher
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: publisher
+    spec:
+      containers:
+      - env:
+        - name: JAEGER_SERVICE_NAME
+          value: publisher.default
+        - name: JAEGER_AGENT_HOST
+          value: jaeger-agent
+        - name: JAEGER_AGENT_PORT
+          value: "6831"
+        image: carlosedp/microservices-demo-publisher
+        name: publisher
+        ports:
+        - containerPort: 8080
+          name: publisher
+      restartPolicy: Always

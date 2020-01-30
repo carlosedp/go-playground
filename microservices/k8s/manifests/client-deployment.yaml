@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: client
+  name: client
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+      - env:
+        - name: JAEGER_SERVICE_NAME
+          value: client.default
+        - name: JAEGER_AGENT_HOST
+          value: jaeger-agent
+        - name: JAEGER_AGENT_PORT
+          value: "6831"
+        image: carlosedp/microservices-demo-client
+        name: client
+        ports:
+        - containerPort: 8080
+          name: client
+      restartPolicy: Always

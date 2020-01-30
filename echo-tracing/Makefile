@@ -13,7 +13,7 @@ comma = ,
 all: $(PLATFORMS)
 
 $(PLATFORMS):
-	GOOS=$(os) GOARCH=$(arch) CGO_ENABLED=0 go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o ${APP}-$(os)-$(arch)
+	GOOS=$(os) GOARCH=$(arch) CGO_ENABLED=0 go build -a -installsuffix cgo -ldflags '-s -w -extldflags "-static"' -o ${APP}-$(os)-$(arch)
 
 docker: $(PLATFORMS)
 	docker buildx build -t ${REPO}/${APP} --platform=$(subst $(space),$(comma),$(PLATFORMS)) --push .

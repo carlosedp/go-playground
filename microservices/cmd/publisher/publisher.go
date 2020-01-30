@@ -22,7 +22,7 @@ func main() {
 		defer span.Finish()
 
 		helloStr := r.FormValue("helloStr")
-		url := "http://localhost:8080/test/" + helloStr
+		url := "http://echo-app:8080/test/" + helloStr
 		req, err := tracing.NewTracedRequest("GET", url, nil, span)
 
 		resp, err := xhttp.Do(req)
@@ -35,5 +35,5 @@ func main() {
 		fmt.Println(string(resp))
 	})
 
-	log.Fatal(http.ListenAndServe(":8082", nil))
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: formatter
+  name: formatter
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: formatter
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: formatter
+    spec:
+      containers:
+      - env:
+        - name: JAEGER_SERVICE_NAME
+          value: formatter.default
+        - name: JAEGER_AGENT_HOST
+          value: jaeger-agent
+        - name: JAEGER_AGENT_PORT
+          value: "6831"
+        image: carlosedp/microservices-demo-formatter
+        imagePullPolicy: Always
+        name: formatter
+        ports:
+        - containerPort: 8080
+          name: formatter
+      restartPolicy: Always

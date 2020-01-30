@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: jaeger-agent
+  name: jaeger-agent
+  namespace: default
+spec:
+  ports:
+  - name: jaeger-agent
+    port: 6831
+    protocol: UDP
+    targetPort: 6831
+  selector:
+    app: jaeger-agent

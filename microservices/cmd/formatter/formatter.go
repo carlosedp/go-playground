@@ -19,6 +19,7 @@ func main() {
 	http.HandleFunc("/format", func(w http.ResponseWriter, r *http.Request) {
 		spanCtx, _ := tracer.Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(r.Header))
 		span := tracer.StartSpan("format", ext.RPCServerOption(spanCtx))
+
 		defer span.Finish()
 		helloTo := r.FormValue("helloTo")
 		helloStr := fmt.Sprintf("Hello, %s!", helloTo)
@@ -29,5 +30,5 @@ func main() {
 		w.Write([]byte(helloStr))
 	})
 
-	log.Fatal(http.ListenAndServe(":8081", nil))
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }

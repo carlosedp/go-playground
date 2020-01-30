@@ -47,7 +47,7 @@ func TraceFunction(ctx context.Context, fn interface{}, params ...interface{}) (
 	name := runtime.FuncForPC(reflect.ValueOf(fn).Pointer()).Name()
 	// Create child span
 	parentSpan := opentracing.SpanFromContext(ctx)
-	sp := opentracing.StartSpan(
+	sp := opentracing.StartSpanFromContext(
 		"Function - "+name,
 		opentracing.ChildOf(parentSpan.Context()))
 	defer sp.Finish()

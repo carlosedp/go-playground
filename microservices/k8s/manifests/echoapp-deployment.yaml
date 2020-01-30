@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: echo-app
+  name: echo-app
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo-app
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: echo-app
+    spec:
+      containers:
+      - env:
+        - name: JAEGER_SERVICE_NAME
+          value: echo-app.default
+        - name: JAEGER_AGENT_HOST
+          value: jaeger-agent
+        - name: JAEGER_AGENT_PORT
+          value: "6831"
+        image: carlosedp/microservices-demo-echo-app
+        name: echo-app
+        ports:
+        - containerPort: 8080
+          name: echo-app
+      restartPolicy: Always

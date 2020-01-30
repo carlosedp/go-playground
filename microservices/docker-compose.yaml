@@ -1,0 +1,74 @@
+version: '3'
+services:
+
+  client:
+    image: carlosedp/microservices-demo-client
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      JAEGER_SERVICE_NAME: client
+      JAEGER_AGENT_HOST: jaeger-agent
+    networks:
+      - jaeger-network
+    labels:
+      - "app=client"
+
+  publisher:
+    image: carlosedp/microservices-demo-publisher
+    restart: unless-stopped
+    environment:
+      JAEGER_SERVICE_NAME: publisher
+      JAEGER_AGENT_HOST: jaeger-agent
+    networks:
+      - jaeger-network
+    labels:
+      - "app=publisher"
+
+  formatter:
+    image: carlosedp/microservices-demo-formatter
+    restart: unless-stopped
+    environment:
+      JAEGER_SERVICE_NAME: formatter
+      JAEGER_AGENT_HOST: jaeger-agent
+    networks:
+      - jaeger-network
+    labels:
+      - "app=formatter"
+
+  echo-app:
+    image: carlosedp/microservices-demo-echo-app
+    restart: unless-stopped
+    # ports:
+    #   - "8081:8080"
+    environment:
+      JAEGER_SERVICE_NAME: echo-app
+      JAEGER_AGENT_HOST: jaeger-agent
+      JAEGER_AGENT_PORT: 6831
+    networks:
+      - jaeger-network
+    labels:
+      - "app=echo-app"
+
+  # In case you want to run Jaeger all-in-one in the compose
+  # Uncomment jaeger service below and change jaeger-agent --collector.host-port to "jaeger:14267"
+  # jaeger:
+  #   image: jaegertracing/all-in-one:latest
+  #   ports:
+  #     - "6831:6831/udp"
+  #     - "14267:14267"
+  #     - "16686:16686"
+  #   networks:
+  #     - jaeger-network
+
+  jaeger-agent:
+    image: jaegertracing/jaeger-agent
+    command: ["--collector.host-port=host.docker.internal:14267"]
+    restart: unless-stopped
+    networks:
+      - jaeger-network
+
+# volumes:
+
+networks:
+  jaeger-network:

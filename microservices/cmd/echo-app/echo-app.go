@@ -8,11 +8,8 @@ import (
 	"strings"
 	"time"
 
-	// t "microservices/lib/tracing"
-
 	"github.com/labstack/echo-contrib/jaegertracing"
-
-	// "github.com/labstack/echo-contrib/prometheus"
+	"github.com/labstack/echo-contrib/prometheus"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -28,10 +25,10 @@ func main() {
 	}))
 
 	// Prometheus Metrics Middleware
-	// Depends on github.com/carlosedp/echo-contrib@prometheus
-	// p := prometheus.NewPrometheus("echo", nil)
-	// p.Use(e)
+	p := prometheus.NewPrometheus("echo", nil)
+	p.Use(e)
 
+	// Jaeger Tracing middleware
 	c := jaegertracing.New(e, metricsSkipper)
 	defer c.Close()
 
@@ -53,6 +50,9 @@ func metricsSkipper(c echo.Context) bool {
 
 // Handlers
 func rootHandler(c echo.Context) error {
+	sp := jaegertracing.CreateChildSpan(c, "rootHandler")
+	defer sp.Finish()
+
 	os := runtime.GOOS
 	arch := runtime.GOARCH
 	time.Sleep(50 * time.Millisecond)
@@ -68,13 +68,13 @@ func rootHandler(c echo.Context) error {
 
 func testHandler(c echo.Context) error {
 	// Demonstrate Span creation for custom log/tag/baggage append
-	sp := jaegertracing.CreateChildSpan(c, "test handler")
+	sp := jaegertracing.CreateChildSpan(c, "testHandler")
 	defer sp.Finish()
-	var name = ""
-	name = c.Param("name")
+
+	name := c.Param("name")
 	sp.LogEvent("Called testHandler function, HTTP name param is: " + name)
-	sp.SetBaggageItem("name", name)
-	sp.SetTag("name_tag", "name")
+	// sp.SetBaggageItem("name", name)
+	// sp.SetTag("name_tag", "name")
 	time.Sleep(10 * time.Millisecond)
 
 	// Call slow function 5 times, it will create it's own span

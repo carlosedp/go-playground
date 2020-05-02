@@ -47,7 +47,7 @@ func TraceFunction(ctx context.Context, fn interface{}, params ...interface{}) (
 	name := runtime.FuncForPC(reflect.ValueOf(fn).Pointer()).Name()
 	// Create child span
 	parentSpan := opentracing.SpanFromContext(ctx)
-	sp := opentracing.StartSpanFromContext(
+	sp := opentracing.StartSpan(
 		"Function - "+name,
 		opentracing.ChildOf(parentSpan.Context()))
 	defer sp.Finish()
@@ -65,7 +65,8 @@ func TraceFunction(ctx context.Context, fn interface{}, params ...interface{}) (
 	// Check params and call function
 	f := reflect.ValueOf(fn)
 	if f.Type().NumIn() != len(params) {
-		panic("incorrect number of parameters!")
+		e := fmt.Sprintf("Incorrect number of parameters calling wrapped function %s", name)
+		panic(e)
 	}
 	inputs := make([]reflect.Value, len(params))
 	for k, in := range params {

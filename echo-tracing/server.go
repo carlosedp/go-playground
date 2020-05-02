@@ -57,7 +57,9 @@ func rootHandler(c echo.Context) error {
 
 	if name == "" {
 		// Wrap slowFunc on a new span to trace it's execution
-		jaegertracing.TraceFunction(c, slowFunc, "Test String")
+		ch := make(chan string)
+		go jaegertracing.TraceFunction(c, slowFunc, "Test String", ch)
+		_ = <-ch
 		time.Sleep(100 * time.Millisecond)
 		name = "World"
 	}
